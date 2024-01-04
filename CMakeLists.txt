@@ -41,6 +41,10 @@ add_subdirectory(thirdparty/spdlog)
 
 target_link_libraries(${ExcutableName} PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
 
+add_subdirectory(thirdparty/inja)
+
+target_link_libraries(${ExcutableName} PUBLIC inja)
+
 add_custom_command(TARGET ${ExcutableName} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory  
 		"${LLVM_SHARED_LIBRARY_DIR}"
@@ -53,6 +57,7 @@ get_property(target_include_dir TARGET ${targetMetaInfoExcutable} PROPERTY INCLU
         set(_clang_parse_flag "${_clang_parse_flag}-I${includeDir} ")
     endforeach() 
     set(_clang_parse_flag "${MetaGenDir} ${_clang_parse_flag}")
+    message("MetaParser arg: ${_clang_parse_flag}")
     add_custom_command(TARGET ${targetMetaInfoExcutable} POST_BUILD
 	COMMAND $<TARGET_FILE:${targetMetaInfoExcutable}> ARGS "${_clang_parse_flag}")
 
@@ -60,4 +65,4 @@ endfunction()
 
 set(metaDir ${CMAKE_CURRENT_SOURCE_DIR}/include())
 
-setParserFlag(${ExcutableName} ${metaDir})
+setParserFlag(${ExcutableName} ${metaDir} )
