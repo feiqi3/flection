@@ -51,18 +51,4 @@ add_custom_command(TARGET ${ExcutableName} POST_BUILD
 		$<TARGET_FILE_DIR:${ExcutableName}>)
 
 
-function(setParserFlag targetMetaInfoExcutable MetaGenDir)
-get_property(target_include_dir TARGET ${targetMetaInfoExcutable} PROPERTY INCLUDE_DIRECTORIES)
-    foreach(includeDir ${target_include_dir})
-        set(_clang_parse_flag "${_clang_parse_flag}-I${includeDir} ")
-    endforeach() 
-    set(_clang_parse_flag "${MetaGenDir} ${_clang_parse_flag}")
-    message("MetaParser arg: ${_clang_parse_flag}")
-    add_custom_command(TARGET ${targetMetaInfoExcutable} POST_BUILD
-	COMMAND $<TARGET_FILE:${targetMetaInfoExcutable}> ARGS "${_clang_parse_flag}")
-
-endfunction()
-
-set(metaDir ${CMAKE_CURRENT_SOURCE_DIR}/include())
-
-setParserFlag(${ExcutableName} ${metaDir} )
+#setParserFlag(${ExcutableName} ${metaDir} )

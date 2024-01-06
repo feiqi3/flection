@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.11)
+
+project(Flection_Example VERSION 0.0.1
+        LANGUAGES C CXX)
+
+
+add_executable(meta_gen_example example.cpp)   
+
+set_target_properties(meta_gen_example PROPERTIES 
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
+
+target_include_directories(meta_gen_example PUBLIC ../include)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)  
+
+set(configFileDir ${CMAKE_SOURCE_DIR}./config)    
+set(tplDir ${CMAKE_SOURCE_DIR}/../templates)   
+set(parseDir ${CMAKE_SOURCE_DIR})   
+set(metaGenDir ${CMAKE_SOURCE_DIR}/metaGen)  
+
+file(WRITE ${CMAKE_SOURCE_DIR}/config "${tplDir}")
+file(APPEND ${CMAKE_SOURCE_DIR}/config "\n${parseDir}")
+file(APPEND ${CMAKE_SOURCE_DIR}/config "\n${metaGenDir}")
+
+get_property(target_include_dir TARGET meta_gen_example PROPERTY INCLUDE_DIRECTORIES)
+message(${target_include_dir})
+foreach(i ${target_include_dir})
+    file(APPEND ${CMAKE_SOURCE_DIR}/config "\n-I${i}")
+endforeach()
+
+file(MAKE_DIRECTORY ${metaGenDir}) 
+file(TOUCH "${metaGenDir}/flectionIncludeAll.hpp")
+file(WRITE "${metaGenDir}/flectionIncludeAll.hpp" "#pragma once\nnamespace flection{\nclass rflRegister {\npublic:\nstatic void registerAll() {\n}\n};\n};")
+
+add_subdirectory(../ ${CMAKE_SOURCE_DIR}/bin)
+add_custom_command(TARGET meta_gen_example POST_BUILD
+COMMAND ${CMAKE_SOURCE_DIR}/bin/metaGen ARGS "${CMAKE_SOURCE_DIR}/config")
