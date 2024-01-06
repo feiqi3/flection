@@ -22,6 +22,7 @@ class fsUtils {
                                    const std::optional<fileSuffixFilter> &filter = std::nullopt);
   static bool createDir(const std::string &fileAbsolut);
   static std::fstream createFile(const std::string &fileAbsolut);
+  static std::vector<std::string> getConfig(const std::string& in);
     private:
     static void regexPrebuilt(std::string&);
 };

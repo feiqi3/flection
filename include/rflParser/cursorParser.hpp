@@ -12,18 +12,16 @@
 #include <unordered_map>
 namespace flection {
 
-    class metaClassParser{
-        public:
-        metaClassParser();
-        ~metaClassParser(){};
-        std::vector<clsDecl> parse(const flection::cursor& root);
-        private:
-        CursorList findClassCursorWithMetaInfo() const noexcept;
-        CursorList findChildrenCursorWithMetaInfo() const noexcept;
-        std::optional<clsDecl> clsMetaCursorParse(const cursor&)const;
-        funcDecl funcCursorParse(const cursor&)const;
-        fieldDecl fieldCursorParse(const cursor&)const;
-    };
+	class metaClassParser {
+	public:
+		metaClassParser();
+		~metaClassParser() {};
+		std::vector<clsDecl> parse(const flection::cursor& root);
+	private:
+		std::optional<clsDecl> clsMetaCursorParse(const cursor&)const;
+		funcDecl funcCursorParse(const cursor&)const;
+		fieldDecl fieldCursorParse(const cursor&)const;
+	};
 }
 
 #endif

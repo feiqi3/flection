@@ -1,0 +1,50 @@
+
+namespace flection {
+std::string Field::getFieldName() { return std::get<0>(*_funcTuple)(); }
+std::string Field::getTypeName() { return std::get<1>(*_funcTuple)(); }
+void Field::setValue(void *a, void *b) const {
+  return std::get<2>(*_funcTuple)(a, b);
+}
+void *Field::getValue(void *a) const { return std::get<3>(*_funcTuple)(a); }
+
+std::string Type::getTypeName() { return std::get<0>(*this->funcs)(); }
+
+void rflRegisterHelper::fieldRegister(Type *type, fieldFuncTuple *func) {
+    auto tmp_field = new Field;
+    tmp_field->_funcTuple = func;
+    type->fieldList.push_back(tmp_field);
+  }
+
+ void rflRegisterHelper::typeRegister(Type *type,typeFuncTuple* func)
+  {
+    type->funcs = func;
+  }
+
+void rflRegisterHelper::register2Flection(Type* type){
+    flection::metaMap[type->getTypeName()] = type;
+}
+
+ std::optional<Type> flection::getType(const std::string &tname) {
+    auto t = metaMap.find(tname);
+    if (t != metaMap.end()) {
+      return *t->second;
+    }
+    return std::nullopt;
+  }
+
+ const Field *const Type::getField(const std::string &s){
+    auto ret = std::find_if(fieldList.begin(), fieldList.end(), [s](Field *a) {
+      if (a->getFieldName() == s) {
+        return 1;
+      }
+      return 0;
+    });
+    if (ret != fieldList.end()) {
+      return *ret;
+    }
+    return nullptr;
+}
+
+std::unordered_map<std::string, Type *> flection::metaMap;
+
+} // namespace flection

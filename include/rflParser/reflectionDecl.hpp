@@ -14,6 +14,8 @@ namespace flection {
 
 class clsDecl;
 
+//TODO: 
+
 enum rflType {
   none = _BIT(1, 0),
   serializable = _BIT(1, 1),

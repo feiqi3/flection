@@ -22,6 +22,16 @@ class utils{
         ret.push_back(str.substr(last,count));
         return ret;;
     }
+    static bool hasNamespaceInClsName(std::string& str){
+        bool flag = false;
+        for (auto i = 0; i < str.size(); ++i) {
+            if(str[i] == ':'){
+                flag = true;
+                str[i] = '_';
+            }
+        }
+        return flag;
+    }
 };
 }
 

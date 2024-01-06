@@ -1,4 +1,6 @@
 #include "clangWrapper/cursorWrapper.hpp"
+#include "generator/generator.hpp"
+#include "inja/parser.hpp"
 #include "logWrapper.hpp"
 #include "rflParser/cursorParser.hpp"
 #include "rflParser/rflParser.hpp"
@@ -8,39 +10,46 @@
 #include "clang-c/Index.h"
 #include <chrono>
 #include <cstddef>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <ostream>
 #include <string>
 #include <string_view>
 #include <vector>
+#include"utils/clangUtils.hpp"
+int main(int argc, const char** argv) {
+	if(argc == 1){
+		std::cout<<"Usage: run with path of config file.";
+		std::exit(0);
+	}
+	std::string configPath = argv[1];
+	auto configVec = flection::fsUtils::getConfig(configPath);
+	auto templateDir = configVec[0];
+	auto parseDir = configVec[1];
+	auto outPutDir = configVec[2];
+	configVec.erase(configVec.begin(),configVec.begin()+3);
 
-int main(int argc, const char **argv) {
+	flection::rflParser parser(configVec);
 
-  if (argc <= 1) {
-    FLOG_ERROR("Fatal error: no input files.");
-    return 0;
-  }
-  
-  FLOG_INFO("Parse begin.");
-  auto beginTime = std::chrono::system_clock::now();
+	FLOG_INFO("Parse begin.");
 
-  auto argsVec = flection::utils::splitStringBySpace(argv[1]);
-  std::string parseDir = argsVec[0];
-  argsVec.erase(argsVec.begin());
-  for (int i = 2; i < argc; ++i) {
-    argsVec.push_back(std::string(argv[i]));
-  }
+	auto beginTime = std::chrono::system_clock::now();
 
-  flection::rflParser parser(argsVec);
-  parser.parseDirectory(parseDir);
-  auto parseResult = parser.getResult();
-  for (auto &&i : parseResult) {
-    std::cout << i;
-  }
+	parser.parseDirectory(parseDir);
 
-  auto timeTaken = std::chrono::system_clock::now() -  beginTime;
+	auto parseRes = parser.getResult();
 
-  FLOG_INFO("Parse end. Time used: {}s. ",std::chrono::duration_cast<std::chrono::milliseconds>(timeTaken).count()/1000.);
+	for (auto&& i : parseRes) {
+		std::cout << i;
+	}
+
+	auto timeTaken = std::chrono::system_clock::now() - beginTime;
+
+	FLOG_INFO("Parse end. Time used: {}s. ", std::chrono::duration_cast<std::chrono::milliseconds>(timeTaken).count() / 1000.);
+
+	flection::generator gen(parseRes,templateDir);
+
+	gen.CodeRender(outPutDir);
 
 }

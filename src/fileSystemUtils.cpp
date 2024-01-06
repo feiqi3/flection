@@ -1,7 +1,10 @@
 #include "utils/fileSystemUtils.hpp"
+#include "logWrapper.hpp"
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <ios>
+#include <istream>
 #include <optional>
 #include <ostream>
 #include <regex>
@@ -54,6 +57,21 @@ bool fsUtils::createDir(const std::string &fileAbsolut) {
 
 std::fstream fsUtils::createFile(const std::string &fileAbsolut) {
   return std::fstream(fileAbsolut, std::ios_base::out | std::ios_base::trunc);
+}
+
+std::vector<std::string> fsUtils::getConfig(const std::string &in) {
+
+  std::fstream fs(in, std::iostream::in);
+  if (!fs.is_open()) {
+    FLOG_ERROR("Open Config file error.");
+    std::exit(0);
+  }
+  std::string t;
+  std::vector<std::string> ret;
+  while (std::getline(fs, t)) {
+    ret.push_back(t);
+  }
+  return ret;
 }
 
 } // namespace flection

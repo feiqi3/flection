@@ -1,6 +1,5 @@
 #pragma once
 
-#include "logWrapper.hpp"
 #ifndef LOGWRAPPER_HPP_
 #define LOGWRAPPER_HPP_
 
@@ -18,13 +17,13 @@
 #define FLOG_CRITICAL(...) SPDLOG_CRITICAL(__VA_ARGS__)
 
 namespace flection {
-class logRegist {
+class logRegister {
 public:
-  logRegist();
-} inline static logRegister;
+  logRegister();
+};
 
-inline flection::logRegist::logRegist(){
-    auto defaultLogger = spdlog::stdout_color_mt("console_logger");
+inline flection::logRegister::logRegister(){
+    auto defaultLogger = spdlog::stdout_color_mt("m_console_logger");
     spdlog::set_default_logger(defaultLogger);
     FLOG_PATTERN("[MetaParser %H:%M:%S] %v");
 }

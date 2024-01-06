@@ -1,0 +1,23 @@
+#pragma once
+#ifndef FLECTION_INCLUDE_ALL_HPP_
+#define FLECTION_INCLUDE_ALL_HPP_
+
+
+## for cls in ClsNameList
+#include "reflection_gen_{{ cls }}.hpp"
+## endfor
+
+namespace flection{
+
+class rflRegister {
+public:
+  static void registerAll() { 
+## for cls in ClsNameList
+        MetaRegister_{{ cls }}::TypeRegister();
+## endfor
+    }
+};
+
+};
+
+#endif

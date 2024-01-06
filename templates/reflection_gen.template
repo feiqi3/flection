@@ -1,0 +1,51 @@
+#pragma once
+#ifndef {{ upper(clsName) }}_HPP_
+#define {{ upper(clsName) }}_HPP_
+
+#include <string>
+#include "rfl/reflection.hpp"
+#include "{{ filePath }}"
+
+namespace flection{
+
+template<> class FlectionGenCls<{{ originName }}>{
+    public: 
+    friend class Field;
+    friend class Type;
+    
+    //Class metaInfo
+    static std::string getClsName() { return "{{ originName }}"; }
+    static typeFuncTuple *registerType() { return new typeFuncTuple(getClsName); }
+
+{%for field in default(fields,null)%}  
+    //Field MetaInfo : {{ field }}
+    static std::string getFieldName_{{ field.name }}() { return "{{ field.name }}"; }
+    static void setValue_{{ field.name }}({{ originName }} *instance, {{ field.type }} *value) { instance->{{ field.name }} = *value; }
+    static {{ field.type }} *getValue_{{ field.name }}({{ originName }} *instance) { return &instance->{{ field.name }}; }
+    static std::string getTypeName_{{ field.name }}() { return "{{ field.type }}"; }
+    
+    static fieldFuncTuple *registerField_{{ field.name }}() {
+        return new fieldFuncTuple{
+            []() { return getFieldName_{{ field.name }}(); }, 
+            []() { return getTypeName_{{ field.name }}(); },
+            [](void *instance, void *value) { setValue_{{ field.name }}(({{ originName }} *)instance, ({{ field.type }} *)value); },
+            [](void *instance) { return (void*)(getValue_{{ field.name }}(({{ originName }} *)instance)); } 
+        };
+    }
+{% endfor %}
+};
+
+class MetaRegister_{{ clsName }} {
+public:
+  static void TypeRegister() {
+    auto tmp_type = new Type;
+{%for field in default(fields,null) %}
+    rflRegisterHelper::fieldRegister(tmp_type,FlectionGenCls<{{ originName }}>::registerField_{{ field.name }}());
+{%endfor%}
+    rflRegisterHelper::typeRegister(tmp_type, FlectionGenCls<{{ originName }}>::registerType());
+    rflRegisterHelper::register2Flection(tmp_type);
+  }
+};
+};//flection
+
+#endif

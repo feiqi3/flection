@@ -8,19 +8,20 @@
 #include <vector>
 namespace flection {
 
-class rflParser{
-    public:
-    rflParser(int args,const char** argv);
-    rflParser(std::vector<std::string>& args);
-    void parseFile(const std::string& filename)noexcept;
-    void parseDirectory(const std::string& dirName)noexcept;
-    std::vector<clsDecl> getResult()const;
-    void setFilter(fileSuffixFilter& list);
-    private:
-    std::vector<std::string> compileFlags;
-    fileSuffixFilter filterList;
-    std::unordered_map<std::string,clsDecl> clsMap;
-};
+	class rflParser {
+	public:
+		rflParser() {}
+		rflParser(int args, const char** argv);
+		rflParser(std::vector<std::string>& args);
+		void parseFile(const std::string& filename)noexcept;
+		void parseDirectory(const std::string& dirName)noexcept;
+		std::vector<clsDecl> getResult()const;
+		void setFilter(fileSuffixFilter& list);
+	private:
+		std::vector<std::string> compileFlags;
+		fileSuffixFilter filterList;
+		std::unordered_map<std::string, clsDecl> clsMap;
+	};
 }
 
 #endif

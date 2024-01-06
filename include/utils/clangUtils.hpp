@@ -5,10 +5,10 @@
 #define CLANGUTILS_HPP_
 
 namespace flection {
-    class clangUtils{
-        public:
-        static std::string getString(const CXString& cxs);
-    };
+	class clangUtils {
+	public:
+		static std::string getString(const CXString& cxs);
+	};
 }
 
 #endif
