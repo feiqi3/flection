@@ -3,7 +3,7 @@
 #define {{ upper(clsName) }}_HPP_
 
 #include <string>
-#include "rfl/reflection.hpp"
+#include "flection/flection.hpp"
 #include "{{ filePath }}"
 
 namespace flection{

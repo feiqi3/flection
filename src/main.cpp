@@ -48,8 +48,10 @@ int main(int argc, const char** argv) {
 
 	FLOG_INFO("Parse end. Time used: {}s. ", std::chrono::duration_cast<std::chrono::milliseconds>(timeTaken).count() / 1000.);
 
+	FLOG_INFO("Code generation begin.");
 	flection::generator gen(parseRes,templateDir);
 
 	gen.CodeRender(outPutDir);
+	FLOG_INFO("Code end.");
 
 }
