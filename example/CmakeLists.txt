@@ -11,7 +11,7 @@ set_target_properties(meta_gen_example PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
-target_include_directories(meta_gen_example PUBLIC ../include)
+target_include_directories(meta_gen_example PUBLIC ./)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)  
 
@@ -34,6 +34,5 @@ file(MAKE_DIRECTORY ${metaGenDir})
 file(TOUCH "${metaGenDir}/flectionIncludeAll.hpp")
 file(WRITE "${metaGenDir}/flectionIncludeAll.hpp" "#pragma once\nnamespace flection{\nclass rflRegister {\npublic:\nstatic void registerAll() {\n}\n};\n};")
 
-add_subdirectory(../ ${CMAKE_SOURCE_DIR}/bin)
 add_custom_command(TARGET meta_gen_example POST_BUILD
 COMMAND ${CMAKE_SOURCE_DIR}/bin/metaGen ARGS "${CMAKE_SOURCE_DIR}/config")
